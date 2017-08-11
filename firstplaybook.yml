@@ -2,6 +2,21 @@
 - hosts: devservers
   remote_user: scott
   tasks:
+  - name: ensure curl is installed and at the latest version
+    apt:
+      name: curl
+      state: latest
+    become: true
+  - name: ensure zip is installed and at the latest version
+    apt:
+      name: zip
+      state: latest
+    become: true
+  - name: ensure unzip is installed and at the latest version
+    apt:
+      name: unzip
+      state: latest
+    become: true
   - name: ensure vim is installed and at the latest version
     apt:
       name: vim
@@ -20,6 +35,26 @@
   - name: ensure byobu is installed and at the latest version
     apt:
       name: byobu
+      state: latest
+    become: true
+  - name: ensure mycli is installed and at the latest version
+    apt:
+      name: mycli
+      state: latest
+    become: true
+  - name: ensure supervisor is installed and at the latest version
+    apt:
+      name: supervisor
+      state: latest
+    become: true
+  - name: ensure redis is installed and at the latest version
+    apt:
+      name: redis-server
+      state: latest
+    become: true
+  - name: ensure nginx is installed and at the latest version
+    apt:
+      name: nginx
       state: latest
     become: true
 
