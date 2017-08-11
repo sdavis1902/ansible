@@ -1,0 +1,25 @@
+---
+- hosts: devservers
+  remote_user: scott
+  tasks:
+  - name: ensure vim is installed and at the latest version
+    apt:
+      name: vim
+      state: latest
+    become: true
+  - name: ensure git is installed and at the latest version
+    apt:
+      name: git
+      state: latest
+    become: true
+  - name: ensure htop is installed and at the latest version
+    apt:
+      name: htop
+      state: latest
+    become: true
+  - name: ensure byobu is installed and at the latest version
+    apt:
+      name: byobu
+      state: latest
+    become: true
+
