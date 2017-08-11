@@ -2,59 +2,147 @@
 - hosts: devservers
   remote_user: scott
   tasks:
+
   - name: ensure curl is installed and at the latest version
     apt:
       name: curl
       state: latest
     become: true
+
   - name: ensure zip is installed and at the latest version
     apt:
       name: zip
       state: latest
     become: true
+
   - name: ensure unzip is installed and at the latest version
     apt:
       name: unzip
       state: latest
     become: true
+
   - name: ensure vim is installed and at the latest version
     apt:
       name: vim
       state: latest
     become: true
+
   - name: ensure git is installed and at the latest version
     apt:
       name: git
       state: latest
     become: true
+
   - name: ensure htop is installed and at the latest version
     apt:
       name: htop
       state: latest
     become: true
+
   - name: ensure byobu is installed and at the latest version
     apt:
       name: byobu
       state: latest
     become: true
+
   - name: ensure mycli is installed and at the latest version
     apt:
       name: mycli
       state: latest
     become: true
+
   - name: ensure supervisor is installed and at the latest version
     apt:
       name: supervisor
       state: latest
     become: true
+
   - name: ensure redis is installed and at the latest version
     apt:
       name: redis-server
       state: latest
     become: true
+
   - name: ensure nginx is installed and at the latest version
     apt:
       name: nginx
       state: latest
     become: true
 
+  - name: ensure ag is installed and at the latest version
+    apt:
+      name: silversearcher-ag
+      state: latest
+    become: true
+
+# CTAGS
+  - name: ensure ctags is installed and at the latest version
+    apt:
+      name: exuberant-ctags
+      state: latest
+    become: true
+
+#install PHP stuff
+  - name: PHP | Add php-7.1 PPA
+    apt_repository:
+      repo: 'ppa:ondrej/php'
+      state: present
+    become: true
+
+  - name: PHP | install php packages
+    apt:
+      pkg: "{{ item }}"
+      state: installed
+    with_items:
+      - php7.1-fpm
+      - php7.1-cli
+      - php7.1-common
+      - php7.1-curl
+      - php7.1-json
+      - php7.1-gd
+      - php7.1-mcrypt
+      - php7.1-odbc
+      - php7.1-pgsql
+      - php7.1-mbstring
+      - php7.1-mysql
+      - php7.1-xmlrpc
+      - php7.1-opcache
+      - php7.1-intl
+      - php7.1-bz2
+      - php7.1-xml
+      - php7.1-imagick
+    become: true
+
+# COMPOSER
+  - name: PHP | Check if Composer is installed (ignore if fails)
+    raw: composer
+    register: composer_installed
+    ignore_errors: true
+
+  - name: PHP | Install Composer
+    shell: curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer creates=/usr/local/bin/composer
+    when: composer_installed.stdout.find('command not found') != -1
+    become: true
+
+# PHP CS FIXER
+  - name: PHP | Check if Composer is installed (ignore if fails)
+    raw: php-cs-fixer
+    register: phpcsfixer_installed
+    ignore_errors: true
+
+  - name: PHP | Install PHP CS FIXER
+    shell: wget http://cs.sensiolabs.org/download/php-cs-fixer-v2.phar -O php-cs-fixer && chmod a+x php-cs-fixer && mv php-cs-fixer /usr/local/bin/php-cs-fixer
+    when: phpcsfixer_installed.stdout.find('command not found') != -1
+    become: true
+
+
+
+# MariaDB Install and setup
+  #- name: Install MariaDB
+    #apt:
+      #pkg: "{{ item }}"
+      #state: present
+    #become: true
+    #with_items:
+      #- mariadb-server
+      #- mariadb-client
